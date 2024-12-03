@@ -25,7 +25,7 @@ from render.render import RenderHelper
 
 cfg = MagInkDashConfig.get_config()
 
-app = FastAPI(title="MagInkDashPlus Server", version="0.1.0")
+app = FastAPI(title="MagInkDashPlus Server", version="0.2.0")
 
 logger = structlog.get_logger()
 
@@ -38,7 +38,10 @@ def health_check():
     return {"status": "ok"}
 
 
-@app.get("/test", summary="Background image for testing",)
+@app.get(
+    "/test",
+    summary="Background image for testing",
+)
 def get_background() -> FileResponse:
     return FileResponse("render/background.png", media_type="image/png")
 
@@ -54,7 +57,8 @@ def get_image() -> FileResponse:
     )
 
     # Retrieve Calendar Data
-    currDate = dt.now(cfg.DISPLAY_TZ).date()
+    currTime = dt.now(cfg.DISPLAY_TZ)
+    currDate = currTime.date()
     calStartDatetime = cfg.DISPLAY_TZ.localize(dt.combine(currDate, dt.min.time()))
     calEndDatetime = cfg.DISPLAY_TZ.localize(
         dt.combine(
@@ -87,7 +91,7 @@ def get_image() -> FileResponse:
             cfg.IMAGE_WIDTH, cfg.IMAGE_HEIGHT, cfg.ROTATE_ANGLE
         )
         renderService.process_inputs(
-            currDate,
+            currTime,
             current_weather,
             hourly_forecast,
             daily_forecast,

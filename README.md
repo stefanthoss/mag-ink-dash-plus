@@ -71,10 +71,16 @@ ROTATE_ANGLE | No | 0 | If image is rendered in portrait orientation, angle to r
 Run
 
 ```shell
+poetry run python src/main.py
+```
+
+or
+
+```shell
 docker compose -f docker-compose.dev.yml up --build
 ```
 
-locally to build a new image and start it, API docs will be served at <http://localhost:5000/docs>.
+locally to start the application, API docs will be served at <http://localhost:5000/docs>.
 
 ## Acknowledgements
 

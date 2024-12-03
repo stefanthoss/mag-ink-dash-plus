@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mag-ink-dash-plus"
-version = "0.1.0"
+version = "0.2.0"
 description = "E-Ink Magic Dashboard that runs off a battery powered Inkplate 10; displaying content from an ICS calendar feed and OpenWeatherMap that are retrieved and rendered by a Docker container."
 authors = ["speedyg0nz", "stefanthoss"]
 license = "Apache License 2.0"

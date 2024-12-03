@@ -85,7 +85,7 @@ class RenderHelper:
 
     def process_inputs(
         self,
-        current_date,
+        current_time,
         current_weather,
         hourly_forecast,
         daily_forecast,
@@ -96,6 +96,8 @@ class RenderHelper:
         # Read html template
         with open(self.currPath + "/dashboard_template.html", "r") as file:
             dashboard_template = file.read()
+
+        current_date = current_time.date()
 
         # Populate the date and events
         cal_events_list = []
@@ -124,6 +126,7 @@ class RenderHelper:
         htmlFile = open(self.currPath + "/dashboard.html", "w")
         htmlFile.write(
             dashboard_template.format(
+                update_time=current_time.strftime("%x %H:%M"),
                 day=current_date.strftime("%-d"),
                 month=current_date.strftime("%B"),
                 weekday=current_date.strftime("%A"),
