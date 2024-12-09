@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <!-- Weather -->
-                <div class="col-md-6">
+                <div class="col-md-5">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
@@ -55,7 +55,8 @@
                             </div>
                             <div class="row align-items-start ">
                                 <div class="col-md-12 text-center">
-                                    <h3>Today<br />{today_weather_pop}% | {today_weather_min}-{today_weather_max}°</h3>
+                                    <h3>Today</h3>
+                                    <div class="weather-forecast">{today_weather_pop}% | {today_weather_min}-{today_weather_max}°</div>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +68,8 @@
                             </div>
                             <div class="row align-items-start ">
                                 <div class="col-md-12 text-center">
-                                    <h3>Tomorrow<br />{tomorrow_weather_pop}% | {tomorrow_weather_min}-{tomorrow_weather_max}°</h3>
+                                    <h3>Tomorrow</h3>
+                                    <div class="weather-forecast">{tomorrow_weather_pop}% | {tomorrow_weather_min}-{tomorrow_weather_max}°</div>
                                 </div>
                             </div>
                         </div>
@@ -79,7 +81,8 @@
                             </div>
                             <div class="row align-items-start ">
                                 <div class="col-md-12 text-center">
-                                    <h3>{dayaftertomorrow}<br />{dayafter_weather_pop}% | {dayafter_weather_min}-{dayafter_weather_max}°</h3>
+                                    <h3>{dayaftertomorrow}</h3>
+                                    <div class="weather-forecast">{dayafter_weather_pop}% | {dayafter_weather_min}-{dayafter_weather_max}°</div>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +92,7 @@
                     </div>
                 </div>
                 <!-- Calendar -->
-                <div class="col-md-6">
+                <div class="col-md-7">
                     <div class="row align-items-start ">
                         <div class="col-md-12 text-right info-bar"  style="height: 25px">
                             Last Updated: {update_time}

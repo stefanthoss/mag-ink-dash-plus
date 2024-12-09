@@ -66,9 +66,6 @@ def get_image() -> FileResponse:
         cfg.DISPLAY_TZ,
         cfg.NUM_CAL_DAYS_TO_QUERY,
     )
-    events_sorted = sorted(
-        events.items(), key=lambda x: x[0]
-    )  # sort by date so we can later take the first N days
 
     end_time = time.time()
     logger.info(f"Completed data retrieval in {round(end_time - start_time, 3)} seconds.")
@@ -84,7 +81,7 @@ def get_image() -> FileResponse:
             current_weather,
             hourly_forecast,
             daily_forecast,
-            events_sorted[: cfg.NUM_DAYS_IN_TEMPLATE],
+            events[: cfg.NUM_DAYS_IN_TEMPLATE],
             tf.name,
         )
 

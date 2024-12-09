@@ -39,8 +39,11 @@ class IcsHelper:
             ) and event.begin < arrow.Arrow.fromdatetime(endDatetime):
                 # extracting and converting events data into a new list
                 new_event = {"summary": event.name}
-                new_event["allday"] = event.all_day
 
+                if event.location:
+                    new_event["location"] = event.location
+
+                new_event["allday"] = event.all_day
                 if new_event["allday"]:
                     # All-day events are always midnight UTC to midnight UTC, therefore timezone needs to be set
                     new_event["startDatetime"] = dt.datetime.fromisoformat(
@@ -61,9 +64,7 @@ class IcsHelper:
                 new_event["isMultiday"] = (
                     new_event["endDatetime"] - new_event["startDatetime"]
                 ) > dt.timedelta(days=1)
+
                 event_list.append(new_event)
 
-        # We need to sort eventList because the event will be sorted in "calendar order" instead of hours order
-        # TODO: improve because of double cycle for now is not much cost
-        event_list = sorted(event_list, key=lambda k: k["startDatetime"])
         return event_list
