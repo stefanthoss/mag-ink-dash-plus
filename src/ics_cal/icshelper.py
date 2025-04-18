@@ -4,14 +4,14 @@
 This is where we retrieve events from the ICS calendar.
 """
 
-from __future__ import print_function
-
 import datetime as dt
 import sys
 
+import icalendar
+import pytz
+import recurring_ical_events
 import requests
 import structlog
-from ics import Calendar
 
 
 class IcsHelper:
@@ -25,37 +25,38 @@ class IcsHelper:
         self.logger.info("Retrieving events from ICS...")
         response = requests.get(ics_url)
         if response.ok:
-            cal = Calendar(response.text)
+            cal = icalendar.Calendar.from_ical(response.text)
         else:
             self.logger.error(f"Received an error when downloading ICS: {response.text}")
             sys.exit(1)
 
-        if not cal.events:
-            self.logger.info("No upcoming calendar events found.")
-        for event in cal.events:
-            # extracting and converting events data into a new list
-            new_event = {"summary": event.name}
+        events = recurring_ical_events.of(cal).between(calStartDatetime, calEndDatetime)
+        local_timezone = pytz.timezone(localTZ)
 
-            if event.location:
-                new_event["location"] = event.location
+        for event in events:
+            new_event = {"summary": str(event.get("SUMMARY"))}
 
-            new_event["allday"] = event.all_day
-            if new_event["allday"]:
-                # All-day events are always midnight UTC to midnight UTC, therefore timezone needs to be set
-                new_event["startDatetime"] = dt.datetime.fromisoformat(
-                    event.begin.replace(tzinfo=localTZ).isoformat()
+            if "LOCATION" in event:
+                new_event["location"] = str(event.get("LOCATION"))
+
+            event_start = event.get("DTSTART").dt
+            event_end = event.get("DTEND").dt
+
+            if isinstance(event_start, dt.datetime):
+                new_event["allday"] = False
+                new_event["startDatetime"] = event_start.astimezone(local_timezone)
+                new_event["endDatetime"] = event_end.astimezone(local_timezone)
+            elif isinstance(event_start, dt.date):
+                new_event["allday"] = True
+                # Convert date into datetime at midnight
+                new_event["startDatetime"] = local_timezone.localize(
+                    dt.datetime.combine(event_start, dt.time(0, 0))
                 )
-                new_event["endDatetime"] = dt.datetime.fromisoformat(
-                    event.end.replace(tzinfo=localTZ).isoformat()
-                ) - dt.timedelta(minutes=1)
+                new_event["endDatetime"] = local_timezone.localize(
+                    dt.datetime.combine(event_end, dt.time(0, 0))
+                )
             else:
-                # Other events need to be translated to local timezone
-                new_event["startDatetime"] = dt.datetime.fromisoformat(
-                    event.begin.to(localTZ).isoformat()
-                )
-                new_event["endDatetime"] = dt.datetime.fromisoformat(
-                    event.end.to(localTZ).isoformat()
-                )
+                raise TypeError(f"Unknown type {type(event_start)} for DTSTART")
 
             new_event["isMultiday"] = (
                 new_event["endDatetime"] - new_event["startDatetime"]
