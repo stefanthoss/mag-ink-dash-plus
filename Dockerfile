@@ -3,7 +3,7 @@ FROM python:3.12-slim
 WORKDIR /app
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends chromium curl \
+    && apt-get install -y --no-install-recommends chromium curl fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/* \
     && python -m pip install --upgrade poetry>=1.8
 
